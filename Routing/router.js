@@ -11,8 +11,14 @@ const { model } = require('mongoose');
 const router =new express.Router();
 
 //3)set path
-
+/* path for register api request */
 router.post('/user/register',userController.register)
+
+/* path for resolve login api requesr */
+router.post('/user/login',userController.login)
+
+/* path to send otp */
+router.post('/user/send-otp',userController.sendOtp)
 
 //4)export router
 module.exports=router

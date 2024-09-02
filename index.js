@@ -7,6 +7,11 @@ const cors=require('cors');
 //import router
 const router =require('./Routing/router')
 
+//import application middleware
+/* const appmiddleware=require('./middleware/appMiddleware'); */
+
+//import connection file
+require('./DB/connection')
 //4)create server
 const urServer=express()
 
@@ -17,12 +22,20 @@ urServer.use(cors())
 //6)convert json to javascript object
 urServer.use(express.json())
 
+/* urServer.use(appmiddleware); */
+
 //server using router
 urServer.use(router)
 
 
-//import connection file
-require('./DB/connection')
+
+
+
+
+
+
+
+
 
 
 //7)set port
