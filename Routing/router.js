@@ -20,5 +20,9 @@ router.post('/user/login',userController.login)
 /* path to send otp */
 router.post('/user/send-otp',userController.sendOtp)
 
+
+//path to update account
+router.put('/user/updation',userController.verify)
+
 //4)export router
 module.exports=router

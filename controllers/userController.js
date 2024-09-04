@@ -4,15 +4,15 @@ const sendEmail=require('../middleware/mailer')
 //import jwt library
 const jwt =require('jsonwebtoken');
 
-//logic for otp verification
+//logic for otp sending
 exports.sendOtp = async (req, res) => {
-    try {
+   
         const { Email } = req.body; // Accessing 'Email' from req.body
         
         // Log to verify that the Email is extracted correctly
         console.log("Sending OTP to:", Email);
         
-        if (!Email) {
+     try { if (!Email) {
             return res.status(400).json({ message: "Email is required" });
         }
         
@@ -35,12 +35,39 @@ exports.sendOtp = async (req, res) => {
     }
 };
 
+//logic for user verification
+exports.verify = async (req,res) => {
+   
+        console.log(req.body); // Log the request body for debugging
+        const { Email } = req.body;
+
+    try {const registeredUser = await users.findOne({ mailId: Email });
+        console.log(registeredUser);
+
+        if (registeredUser) {
+            if (registeredUser.verification == 'false') {
+                await users.updateOne(
+                    { _id: registeredUser._id },
+                    { $set: { verification: true } }
+                );
+               return res.status(200).json('User verified successfully');
+            } else {
+               return  res.status(406).json('User already verified');
+            }
+        } else {
+           return res.status(404).json('User not found'); // Use 404 for user not found
+        }
+    } catch (error) {
+        res.status(500).json('Internal Server Error');
+        console.error('Error during verification:', error);
+    }
+};
 
 
 //logic for user registartion
 exports.register = async(req,res)=>{
     console.log(req.body);
-    const {username,phone_number,email,dob,password}=req.body
+    const {username,phone_number,email,dob,password,verification}=req.body
 
    try{const existingUser=  await users.findOne({mailId:email});
 
@@ -53,7 +80,8 @@ exports.register = async(req,res)=>{
         phoneNumber:phone_number,
         mailId:email,
         dob,
-        password
+        password,
+        verification
     })
     //store particulardata in db
     await newUser.save();

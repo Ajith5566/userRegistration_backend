@@ -26,7 +26,12 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         require:true
+    },
+    verification:{
+        type:String,
+        require:true
     }
+
 })
 
 //model
